@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calc">
+<head>
+  <meta charset="UTF-8">
+  <title>????­</title>
+
+</head>
+<body ng-controller="CartController">
+  <p>???</p><input type="text" ng-change="change()" ng-model="total">
+  <div ng-controller="DetailController">
+      <table class="table table-responsive">
+          <tr>
+              <td>????</td>
+              <td>????</td>
+              <td>????</td>
+          </tr>
+          <tr ng-repeat="item in items">
+              <td>{{item.name}}</td>
+              <td>{{item.price}}</td>
+              <td><input type="text" ng-change="change()" ng-model="item.amount"></td>
+          </tr>
+      </table>
+  </div>
+
+</body>
+<script src="./bower_components/angular/angular.js"></script>
+<script>
+  angular.module('calc',[]);
+  angular.module('calc').controller('CartController',function($scope){
+      $scope.total = 10;
+      $scope.change=function(){
+         $scope.$broadcast('to-detail', $scope.total);
+
+      }
+      $scope.$on('to-calc',function(event,data){
+        $scope.total = (data.amount)*(data.price);
+      })
+  });
+
+  angular.module('calc').controller('DetailController',function($scope){
+      $scope.items=[
+          {name:'F35',amount:1,price:10}
+      ]
+      $scope.change=function(){
+         $scope.$emit('to-calc', $scope.items[0]);
+
+      }
+      $scope.$on('to-detail',function(event,data){
+        $scope.items[0].amount = data/($scope.items[0].price);
+      })
+  });
+</script>
+</html>

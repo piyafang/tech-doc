@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="ppya">
+<head>
+  <meta charset="utf-8">
+  <title>opens</title>
+</head>
+<body>
+    <div ng-controller='groupCtrl'>
+      <group>
+          <list ng-repeat='opener in openers' title="opener.title">
+            {{opener.content}}
+          </list>
+      </group>
+    </div>
+</body>
+<script src="angular.js"></script>
+<script>
+    angular.module('ppya',[]);
+    angular.module('ppya').controller('ppyaCtrl',function($scope){
+      $scope.openers = [
+        {title:"标题1",content:"内容1"},
+        {title:"标题2",content:"内容2"},
+        {title:"标题3",content:"内容3"}
+      ]
+    });
+
+    angular.module('ppya').directive('group',function(){
+      return {
+        restrict: 'E',
+        replace:true,
+        transclude: true,
+        template: '<div ng-transclude></div>',
+        controller: function(){
+          var openers = [];
+          this.addList = function(opener){
+            openers.push(opener);
+          }
+          this.showList = function(current){
+            current.show = ! current.show;
+            angular.forEach(openers,function(opener){
+              if(opener != current){
+                opener.show =false;
+              }
+            })
+          }
+        }
+      }
+    });
+
+    angular.module('ppya').directive('list',function(){
+      return {
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        require: '^group',
+        templateUrl：'opener.html',
+        link: function(scope,element,attrs,groupCtrl){
+          groupCtrl.addOpener(scope);
+          scope.show = false;
+          scope.toggle = function(){
+            groupCtrl.showList(scope);
+          }
+        }
+      }
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,325 @@
+node 博客笔记
+
+
+首先安装  mongodb
+软件地址 
+https://www.mongodb.org/downloads#production；
+
+然后在 mongodb安装目录下找到bin 文件夹进去 在它的位置上按下Shift+鼠标右键 选择 在此处打开命令窗口
+
+我的目录是C:\Program Files\MongoDB\Server\3.0\bin
+
+
+然后在命令窗体中输入  mongod --dbpath=path
+path  是数据库文件的存储路劲  必须存在
+
+注意：这个命令窗体不能关 关闭这个窗口就相当于停止了mongodb服务
+
+在C:\Program Files\MongoDB\Server\3.0\bin下 再打开一个命令行窗口
+
+命令窗体中输入 mongo --host=127.0.0.1 或者 mongo 按回车键
+
+：--host后的值表示服务器的ip地址
+
+
+
+对数据库的操作
+use 数据库名字 我们刚创建的数据库 person 如果不在列表内， 要显示它，我们需要向 person 数据库插入一些数据
+db.person.insert({name:"zhangSan",age:30})
+show dns 看有什么数据库
+
+
+查看当前使用的数据库
+
+bd或者db.getName()
+
+MongoDB 删除数据库
+
+db.dropDatabase();
+
+MongoDB 断开与mongodb服务的连接
+exit 
+MongoDB 查看命令api
+
+
+集合的操作方法
+
+查看帮助api
+
+db.worker.help()
+查看当前数据库下有哪集合（collection）
+show collections
+
+创建集合
+
+db.createCollection(collection_Name)  collection_Name集合的名称
+
+db.collection_Name.insert(document) 
+
+db.collection_name.count()查看集合有几条数据
+db,collection_name.drop()  删除当前数据库中的集合
+
+
+文档的插入
+insert（）
+db.worker.insert({name:'zpx',age:6})
+db.worker.insert([{name:'wangWu',age:50},{name:'xiaoMing',age:60}])
+向worker集合添加多个[{name:'wangWu',age:50},{name:'xiaoMing',age:60}] 
+ 
+save（） 
+ db.person.save({name:"xiaoHong",age:50})
+ db.person.save({_id:ObjectId("562c9caf671c978b6596e825"),name:"xiaoHong",age:10})
+ 
+ 
+ 文档的更新
+ 
+ 
+ update()
+db.collection.update(
+   <query>,
+   <update>,
+   {
+     upsert: <boolean>,
+     multi: <boolean>,
+     writeConcern: <document>
+   }
+)
+
+query : update的查询条件，类似sql update查询内where后面的。
+update : update的对象和一些更新的操作符（如$set,$inc...）等 $inc在原基础上累加后更新   $set直接更新
+upsert  : 可选，这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入。
+multi  : 可选，mongodb 默认是false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新。
+writeConcern  :可选，抛出异常的级别
+
+db.worker.update({name:'liSi'},{$set:{name:'liSi_update'}}) 将document数据中name是liSi 的数据的name修改为liSi_update
+注：如果有多条name是liSi的数据只更新一条
+
+db.worker.update({name:'liSi_update'}, {$set: {age:40}},{multi:true}) 将document数据中name是liSi_update 的数据的age修改为 40
+注：如果有多条name是liSi的数据这些数据全部更新
+
+
+db.person.update({name:'pangzi'},{$inc:{age:1}}) 将document数据中name是lliSi_update 的数据的age在原来的基础上加1
+
+
+
+文档的删除
+
+remove();
+db.collection.remove(
+   <query>,
+   <justOne>
+)
+
+如果你的 MongoDB 是 2.6 版本以后的，语法格式如下：
+db.collection.remove(
+   <query>,
+   {
+     justOne: <boolean>,
+     writeConcern: <document>
+   }
+)
+
+query :（可选）删除的文档的条件。
+justOne : （可选）如果设为 true 或 1，则只删除一个文档。
+writeConcern  :（可选）抛出异常的级别。
+
+db.worker.remove({name:'fJianZhou'}) 删除worker集合里name是fJianZhou的所有Document数据
+
+db.person.remove({name:"xiaoHong"},1)  删除person集合里name是xiaoHong的第一条数据
+
+
+
+查询文档
+
+
+find();
+
+db.worker.find({},{age:1}) 查询指定列 
+
+
+db.person.find().pretty() .pretty()方法以格式化的方式来显示所有文档。
+
+
+db.person.findOne() 匹配第一条数据
+
+查询条件操作符
+
+db.person.find({age:{$gt:30})大于30的数据
+
+$gt >
+$gte >=
+$lt <
+$lte <=
+$ne  !=
+
+$in 包含
+
+$exists  是否存在
+
+使用 _id进行查询
+
+db.person.find('_id',ObjectId());
+
+db.person.find().count() 条数
+查询某个字段的值当中是否包含另一个值
+
+db,person.find({name:/pang/})
+
+开头结尾
+/^pang/
+/pang$/
+
+or 条件查询
+
+
+db.person.find({$or:[{key1:value},{},{}]})
+
+or and
+
+db.person.find(key1:1,key2:2,$or:[])
+
+
+
+limit();
+
+db.person.find().limit(2)查询前2条数据
+
+db.person.find().skip(2)跳过前两条数据
+
+
+sort
+
+db.person.find().sort({age:1}) age升序排序
+
+
+
+
+
+
+
+
+
+安装 mongoose
+
+npm install mongoose
+
+
+引用mongoose：
+
+var mongoose = require("mongoose")；
+
+使用"mongoose"连接数据库：
+var db = mongoose.connect("mongodb://user:pass@localhost:port/database");
+
+执行下面代码检查默认数据库test，是否可以正常连接成功?
+
+例如
+var mongoose = require("mongoose");
+var db = mongoose.connect("mongodb://123.57.143.189:27017/zfpx");
+db.connection.on("error", function (error) {
+    console.log("数据库连接失败：" + error);
+});
+db.connection.on("open", function () {
+    console.log("数据库连接成功");
+});
+
+
+Schema
+定义一个模型骨架
+var PersonSchema = new mongoose.Schema({
+    name : { type:String },
+    age  : { type:Number, default:0 },
+    time : { type:Date, default:Date.now },
+    email: { type:String,default:''}
+});
+基本属性类型有：字符串、日期型、数值型、布尔型(Boolean)、null、数组、内嵌文档等。
+String Date Number Boolean Null Array
+
+创建一个model
+var PersonModel=db.model('person',PersonSchema);
+
+注意 mongoose会在数据库寻找person这个复数的集合 而不会去找person
+
+可以把他放到全局
+
+
+global.Model=function(modName){
+    //console.log(modName)
+    return mongoose.model(modName)
+};
+
+用的时候如果要往里边更新数据插入数据需要new一个 如果查询就不需要了
+new Model(集合)(数据)
+user==数据
+entity保存方法
+new Model('User')(user).save(function(err,user){})
+
+保存数据
+Model保存方法
+new Model('User').create(user,function(){})
+查询数据
+Model('User').find(user,function(err,doc){})
+返回只包含name、age两个键的所有记录
+Model('user').find({},{name:1, age:1, _id:0}，function(err,docs){
+   //docs 查询结果集
+})
+Model('user').findOne()
+Model('user').findById()
+Model('user').find({name:{$exists:true}},function(){})//查询所有存在name属性的文档
+
+数据更新
+
+Model('User').update({name:'junyu'},{$set:{name:'pangzi'}},function(err){}) //一条
+Model('User').update({name:'junyu'},{$set:{name:'pangzi'}},{multi:true},function(err){})//所有
+
+
+
+游标操作
+
+
+
+Model('user').find({},null,{limit:20},function(){})
+
+Model('user').find({},null,{skip:20},function(){})
+
+Model('user').find({},null,{sort:{age:-1}},function(){})降序
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app='FilterApp'>
+<head>
+  <meta charset="utf-8">
+  <title>toNameFilter</title>
+</head>
+<body>
+    <div ng-controller='filterCtrl'>
+      <div ng-repeat="item in items">
+          {{item.name}}
+      </div>
+    </div>
+</body>
+<script src="angular.js"></script>
+<script>
+  var filterApp = angular.module('FilterApp',[]);
+  var filterServer= angular.module('FilterApp');
+  filterServer.controller('filterCtrl',function($scope,$http){
+    $http.get('name.json').success(function(){
+        console.log(name.json)
+    }).error(function(data,status,headers,config){
+      console.log('error');
+    })
+  });
+  filterServer.filter('tonameFilter',function(){
+    return function(){
+
+    }
+  });
+</script>
+
+</html>

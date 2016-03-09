@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='test'>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  .red{
+    border: 1px solid red;
+  }
+  .big{
+    width: 100px;
+    height: 100px;
+    background: #ccc;
+  }
+  </style>
+</head>
+<body>
+  <div  ng-init="click=false;colorchange=false">
+    <button ng-click="click= !click">{{click?'显示':'隐藏'}}</button>
+    <div ng-hide="click" ng-mouseover="colorchange= !colorchange"  ng-class={'red':colorchange}>
+      请输入一个名字：<input type="text" ng-model="name">
+      Hello <span ng-bind="name"></span>
+    </div>
+  </div>
+
+  <div ng-class="{red:red,big:big}" ng-mouseover="red=!red;big=!big">
+    hahahaha
+  </div>
+
+  <!-- ng-repeat 1-->
+  <div ng-init="iphones=[{name:'iphone6',snippet:'iphone is good'},{name:'xiaomi',snippet:'xiaomi is bad'}]">
+    请输入关键字： <input type="text" name="name" value="" ng-model="query">
+    <ul>
+      <li ng-repeat="phone in iphones | filter:query">
+        {{phone.name}}
+        <p>{{phone.snippet}}</p>
+      </li>
+    </ul>
+  </div>
+  <!-- ng-repeat2 -->
+  <div ng-controller="PhoneController">
+    请输入关键字： <input type="text" name="name" value="" ng-model="query">
+    <ul>
+      <li ng-repeat="phone in iphones | filter:query">
+        {{phone.name}}
+        <p>{{phone.snippet}}</p>
+      </li>
+    </ul>
+  </div>
+
+
+<!-- ng-include  内部引用字符串，需加单引号 -->
+  <div ng-include="'index.html'"></div>
+
+
+
+</body>
+<script src="./bower_components/angular/angular.js"></script>
+<script>
+  angular.module('test',[]);
+  angular.module('test').controller('PhoneController',function($scope){
+      $scope.iphones=[{name:'iphone6',snippet:'iphone is good'},{name:'xiaomi',snippet:'xiaomi is bad'}];
+  })
+</script>
+</html>
